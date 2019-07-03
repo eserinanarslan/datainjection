@@ -6,6 +6,7 @@ import os
 def main():
 
     # Open a local file to print data?
+    # outputFile = open("outputFile.txt", "w+")
 
     # Get config data
     configData = getConfigData()
@@ -14,17 +15,25 @@ def main():
     root = getRoot()
 
     # Create a list for all json files in the folder
-    fileLocations = [f for f in root.glob('**/*.json') if f.is_file()]
+    # Not including the non "UTF-8" files
+    fileLocations = [f for f in root.glob('**/*.json') if f.is_file() and not f.name.startswith("._")]
 
     # Print the names of all json files in the folder
     for currentFileLocation in fileLocations:
+
         print(currentFileLocation)
 
         # Print data to output file
+        # currentFile = open(currentFileLocation, "r")
+        # contents = currentFile.read()
+        # outputFile.write(contents)
+        # currentFile.close()
 
     # Connect to db
     # Upload printed data to the db
     # End connection with db
+
+    # outputFile.close()
 
     return
 
