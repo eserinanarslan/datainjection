@@ -47,6 +47,9 @@ def getRoot(configData):
     return Path(rootLocation)
 
 
+# Iterate through every "UTF-8" .json file in the folder
+# Write their relative paths to a list
+# Print the paths to the console
 def iterateFiles(root):
 
     # Create a list for all json files in the folder
@@ -76,6 +79,5 @@ def test():
     testFile.close()
     return
 
-# getRoot()
 # test()
 main()
