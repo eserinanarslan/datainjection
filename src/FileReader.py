@@ -5,12 +5,24 @@ import os
 
 def main():
 
+    # Open a local file to print data?
+
     # Get config data
-    # Establish root
+    configData = getConfigData()
+
+    # Get the root from the config file
+    root = getRoot()
+
+    # Create a list for all json files in the folder
+    fileLocations = [f for f in root.glob('**/*.json') if f.is_file()]
+
+    # Print the names of all json files in the folder
+    for currentFileLocation in fileLocations:
+        print(currentFileLocation)
+
+        # Print data to output file
+
     # Connect to db
-    # Open a local file to print data
-    # Iterate through root folders
-    # Print data to output file
     # Upload printed data to the db
     # End connection with db
 
@@ -40,31 +52,16 @@ def getRoot():
     return Path(rootLocation)
 
 
+# Test if an arbitrarily selected file can be read
 def test():
 
-    # Get config data
-    # configData = getConfigData()
-
-    # Get the root from the config file
-    root = getRoot()
-
-    # Create a list for all the files in the folder
-    files = [f for f in root.glob('**/*') if f.is_file()]
-
-    # Print the names of all files in the folder
-    for currentFile in files:
-        # contents = currentFile.read()
-        # print(contents)
-        print(currentFile)
-
-
-    # Test if a selected file can be read
-    # fileName = r"..\data\requests\facebook-backup\2015\11\24\zed-log\10-requests.json"
-    # testFile = open(fileName, "r")
-    # contents = testFile.read()
-    # print(contents)
-    # testFile.close()
+    fileName = r"..\data\requests\facebook-backup\2015\11\24\zed-log\10-requests.json"
+    testFile = open(fileName, "r")
+    contents = testFile.read()
+    print(contents)
+    testFile.close()
     return
 
-test()
 # getRoot()
+# test()
+main()
