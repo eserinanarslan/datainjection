@@ -2,8 +2,6 @@ import json
 from pathlib import Path
 import os
 
-# Working code with the assumption that the input has "UTF-8" encoding
-
 
 def main():
 
@@ -60,7 +58,8 @@ def test():
         print(currentFile)
 
 
-    # fileName = r"C:\Users\efe.yukselen\PycharmProjects\datainjection\data\requests\2015\09\30\zed-log\07-requests.json"
+    # Test if a selected file can be read
+    # fileName = r"..\data\requests\facebook-backup\2015\11\24\zed-log\10-requests.json"
     # testFile = open(fileName, "r")
     # contents = testFile.read()
     # print(contents)
