@@ -12,8 +12,9 @@ def main():
     configData = getConfigData()
 
     # Get the root from the config file
-    root = getRoot()
+    root = getRoot(configData)
 
+    # Iterate through every file in the folder
     iterateFiles(root)
 
     # Connect to db
@@ -35,9 +36,7 @@ def getConfigData():
 
 
 # Get root path from the config data as relative path
-def getRoot():
-
-    configData = getConfigData()
+def getRoot(configData):
 
     data = json.loads(configData)
 
