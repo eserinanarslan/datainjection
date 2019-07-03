@@ -14,20 +14,7 @@ def main():
     # Get the root from the config file
     root = getRoot()
 
-    # Create a list for all json files in the folder
-    # Not including the non "UTF-8" files
-    fileLocations = [f for f in root.glob('**/*.json') if f.is_file() and not f.name.startswith("._")]
-
-    # Print the names of all json files in the folder
-    for currentFileLocation in fileLocations:
-
-        print(currentFileLocation)
-
-        # Print data to output file
-        # currentFile = open(currentFileLocation, "r")
-        # contents = currentFile.read()
-        # outputFile.write(contents)
-        # currentFile.close()
+    iterateFiles(root)
 
     # Connect to db
     # Upload printed data to the db
@@ -59,6 +46,25 @@ def getRoot():
     # print("Root location is: " + rootLocation)
 
     return Path(rootLocation)
+
+
+def iterateFiles(root):
+
+    # Create a list for all json files in the folder
+    # Not including the non "UTF-8" files
+    fileLocations = [f for f in root.glob('**/*.json') if f.is_file() and not f.name.startswith("._")]
+
+    # Print the names of all json files in the folder
+    for currentFileLocation in fileLocations:
+        print(currentFileLocation)
+
+        # Print data to output file
+        # currentFile = open(currentFileLocation, "r")
+        # contents = currentFile.read()
+        # outputFile.write(contents)
+        # currentFile.close()
+
+    return
 
 
 # Test if an arbitrarily selected file can be read
