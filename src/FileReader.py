@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import os
+import pymongo
 
 
 def main():
@@ -79,5 +79,5 @@ def test():
     testFile.close()
     return
 
-# test()
-main()
+test()
+# main()
