@@ -15,7 +15,8 @@ def main():
     root = getRoot(configData)
 
     # Iterate through every file in the folder
-    iterateFiles(root)
+    fileCount = iterateFiles(root)
+    print("File count is: " + fileCount)
 
     # Connect to db
     # Upload printed data to the db
@@ -52,9 +53,12 @@ def getRoot(configData):
 # Print the paths to the console
 def iterateFiles(root):
 
+    fileCount = 0  # Number of UTF-8 json files in the folder
+
     # Create a list for all json files in the folder
     # Not including the non "UTF-8" files
     fileLocations = [f for f in root.glob('**/*.json') if f.is_file() and not f.name.startswith("._")]
+    fileCount = fileLocations.__sizeof__()
 
     # Print the names of all json files in the folder
     for currentFileLocation in fileLocations:
@@ -66,7 +70,7 @@ def iterateFiles(root):
         # outputFile.write(contents)
         # currentFile.close()
 
-    return
+    return fileCount
 
 
 # Test if an arbitrarily selected file can be read
@@ -79,5 +83,5 @@ def test():
     testFile.close()
     return
 
-test()
-# main()
+# test()
+main()
