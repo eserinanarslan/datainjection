@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import pymongo
+from pymongo import MongoClient
 
 
 def main():
@@ -16,7 +16,7 @@ def main():
 
     # Iterate through every file in the folder
     fileCount = iterateFiles(root)
-    print("File count is: " + fileCount)
+    print("File count is: " , fileCount)
 
     # Connect to db
     # Upload printed data to the db
@@ -63,7 +63,8 @@ def iterateFiles(root):
 
     # Print the names of all json files in the folder
     for currentFileLocation in fileLocations:
-        print(currentFileLocation)
+        # print(currentFileLocation)
+        readJSON(currentFileLocation)
 
         # Print data to output file
         # currentFile = open(currentFileLocation, "r")
@@ -100,6 +101,12 @@ def readJSON(fileName):
     return jsonDicts
 
 
+def createDB():
+
+    client = MongoClient()
+    client.
+
+
 # Test if an arbitrarily selected file can be read
 def test():
 
@@ -120,6 +127,6 @@ def test():
     return
 
 # test()
-# main()
+main()
 # getRoot(getConfigData())
 # readJSON(r"..\data\requests\facebook-backup\2015\11\24\zed-log\10-requests.json")
