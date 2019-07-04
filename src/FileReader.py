@@ -77,6 +77,29 @@ def iterateFiles(root):
     return fileCount
 
 
+# Read the json file line by line and return the dictionaries as a list
+def readJSON(fileName):
+
+    currentFile = open(fileName, "r")
+    contents = currentFile.read()
+    # print(contents)
+    jsonDicts = []
+
+    try:
+        lines = contents.splitlines()
+        for line in lines:
+            data = json.loads(line)
+            # print(data)
+            jsonDicts.append(data)
+
+    except ValueError:
+        print("Value Error! There is a problem with the json file! ")
+
+    currentFile.close()
+    print(jsonDicts)
+    return jsonDicts
+
+
 # Test if an arbitrarily selected file can be read
 def test():
 
@@ -96,6 +119,7 @@ def test():
     testFile.close()
     return
 
-test()
+# test()
 # main()
 # getRoot(getConfigData())
+# readJSON(r"..\data\requests\facebook-backup\2015\11\24\zed-log\10-requests.json")
