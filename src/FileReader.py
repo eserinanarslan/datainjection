@@ -40,6 +40,7 @@ def getConfigData():
 def getRoot(configData):
 
     data = json.loads(configData)
+    print(data)
 
     rootLocation = "../"
     rootLocation += str(data["JSON_PATH"])
@@ -70,6 +71,9 @@ def iterateFiles(root):
         # outputFile.write(contents)
         # currentFile.close()
 
+        # Look at contents
+        # Keep the json keys in a list
+
     return fileCount
 
 
@@ -79,9 +83,19 @@ def test():
     fileName = r"..\data\requests\facebook-backup\2015\11\24\zed-log\10-requests.json"
     testFile = open(fileName, "r")
     contents = testFile.read()
-    print(contents)
+    #print(contents)
+    try:
+        lines = contents.splitlines()
+        for line in lines:
+            data = json.loads(line)
+            print(data)
+
+    except ValueError:
+        print("lmao")
+
     testFile.close()
     return
 
-# test()
-main()
+test()
+# main()
+# getRoot(getConfigData())
