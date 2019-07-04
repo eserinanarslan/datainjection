@@ -14,11 +14,14 @@ def main():
     # Get the root from the config file
     root = getRoot(configData)
 
-    # Iterate through every file in the folder
-    fileCount = iterateFiles(root)
-    print("File count is: " , fileCount)
-
+    client, DB, collection1 = createDB()
     # Connect to db
+
+    # Iterate through every file in the folder
+    fileCount = iterateFiles(root, collection1)
+    print("File count is: ", fileCount)
+
+
     # Upload printed data to the db
     # End connection with db
 
@@ -40,7 +43,7 @@ def getConfigData():
 def getRoot(configData):
 
     data = json.loads(configData)
-    print(data)
+    # print(data)
 
     rootLocation = "../"
     rootLocation += str(data["JSON_PATH"])
@@ -52,7 +55,7 @@ def getRoot(configData):
 # Iterate through every "UTF-8" .json file in the folder
 # Write their relative paths to a list
 # Print the paths to the console
-def iterateFiles(root):
+def iterateFiles(root, collection1):
 
     fileCount = 0  # Number of UTF-8 json files in the folder
 
@@ -64,7 +67,9 @@ def iterateFiles(root):
     # Print the names of all json files in the folder
     for currentFileLocation in fileLocations:
         # print(currentFileLocation)
-        readJSON(currentFileLocation)
+        jsonDicts = readJSON(currentFileLocation)
+        for dict in jsonDicts:
+            collection1.insert_one(dict)
 
         # Print data to output file
         # currentFile = open(currentFileLocation, "r")
@@ -97,14 +102,18 @@ def readJSON(fileName):
         print("Value Error! There is a problem with the json file! ")
 
     currentFile.close()
-    print(jsonDicts)
+    # print(jsonDicts)
     return jsonDicts
 
 
 def createDB():
 
     client = MongoClient()
-    client.
+    DB = client["DataInJectionDB"]
+
+    collection1 = DB["Requests"]
+
+    return client, DB, collection1
 
 
 # Test if an arbitrarily selected file can be read
@@ -130,3 +139,4 @@ def test():
 main()
 # getRoot(getConfigData())
 # readJSON(r"..\data\requests\facebook-backup\2015\11\24\zed-log\10-requests.json")
+
