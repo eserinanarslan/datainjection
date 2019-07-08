@@ -1,12 +1,13 @@
 import json
 from pathlib import Path
 from pymongo import MongoClient
+import time
+import src.DBMS as DBMS
 
 
 def main():
 
-    # Open a local file to print data?
-    # outputFile = open("outputFile.txt", "w+")
+    start = time.time()
 
     # Get config data
     configData = getConfigData()
@@ -14,12 +15,18 @@ def main():
     # Get the root from the config file
     root = getRoot(configData)
 
-    client, DB, collection1 = createDB()
     # Connect to db
+    # DB = DBMS("requests")
+
+    end1 = time.time()
+    print("Pre file reading duration is: " , end1 - start)
 
     # Iterate through every file in the folder
-    fileCount = iterateFiles(root, collection1)
-    print("File count is: ", fileCount)
+    documents, fileCount, docCount = iterateFiles(root)
+    print("File count is: ", fileCount, "Document count is: ", docCount)
+
+    end2 = time.time()
+    print("File reading duration is: ", end2 - end1)
 
 
     # Upload printed data to the db
@@ -28,6 +35,7 @@ def main():
     # outputFile.close()
 
     return
+
 
 # Get config data from the config file
 def getConfigData():
@@ -45,8 +53,7 @@ def getRoot(configData):
     data = json.loads(configData)
     # print(data)
 
-    rootLocation = "../"
-    rootLocation += str(data["JSON_PATH"])
+    rootLocation = str(data["JSON_PATH"])
     # print("Root location is: " + rootLocation)
 
     return Path(rootLocation)
@@ -55,7 +62,7 @@ def getRoot(configData):
 # Iterate through every "UTF-8" .json file in the folder
 # Write their relative paths to a list
 # Print the paths to the console
-def iterateFiles(root, collection1):
+def iterateFiles(root):
 
     fileCount = 0  # Number of UTF-8 json files in the folder
 
@@ -64,23 +71,18 @@ def iterateFiles(root, collection1):
     fileLocations = [f for f in root.glob('**/*.json') if f.is_file() and not f.name.startswith("._")]
     fileCount = fileLocations.__sizeof__()
 
-    # Print the names of all json files in the folder
+    documents = []  # All the individual documents to be added to the database
+    docCount2 = 0
     for currentFileLocation in fileLocations:
         # print(currentFileLocation)
         jsonDicts = readJSON(currentFileLocation)
         for dict in jsonDicts:
-            collection1.insert_one(dict)
+            documents.append(dict)
+            docCount2 += 1
 
-        # Print data to output file
-        # currentFile = open(currentFileLocation, "r")
-        # contents = currentFile.read()
-        # outputFile.write(contents)
-        # currentFile.close()
-
-        # Look at contents
-        # Keep the json keys in a list
-
-    return fileCount
+    docCount = documents.__len__()
+    print("Doc counter = ", docCount2)
+    return documents, fileCount, docCount
 
 
 # Read the json file line by line and return the dictionaries as a list
