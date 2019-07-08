@@ -3,11 +3,15 @@ from pathlib import Path
 from pymongo import MongoClient
 import time
 import src.DBMS as DBMS
-
+import threading
+import multiprocessing
 
 def main():
 
     start = time.time()
+
+    threadCount = multiprocessing.cpu_count()
+    print(threadCount)
 
     # Get config data
     configData = getConfigData()
