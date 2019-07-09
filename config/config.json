@@ -1,6 +1,5 @@
 {
   "JSON_PATH":"../data/requests",
   "CLIENT_URL": "mongodb://localhost:27017/",
-  "DB_NAME":"DataInjectionDB",
-  "THREAD_POOL_SIZE":"4"
+  "DB_NAME":"DataInjection"
 }

@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from pymongo import MongoClient
 import time
-import src.DBMS as DBMS
+from src.DBMS import DBMS as DBMS
 import threading
 import multiprocessing
 
@@ -11,7 +11,7 @@ def main():
     start = time.time()
 
     threadCount = multiprocessing.cpu_count()
-    print(threadCount)
+    print("The number of threads is: ", threadCount)
 
     # Get config data
     configData = getConfigData()
@@ -20,7 +20,7 @@ def main():
     root = getRoot(configData)
 
     # Connect to db
-    # DB = DBMS("requests")
+    DB = DBMS("Requests")
 
     end1 = time.time()
     print("Pre file reading duration is: " , end1 - start)
@@ -32,11 +32,14 @@ def main():
     end2 = time.time()
     print("File reading duration is: ", end2 - end1)
 
+    for document in documents:
+        DB.insertDocument(document)
+
+    end3 = time.time()
+    print("Database injection time is: ", end3 - end2)
 
     # Upload printed data to the db
     # End connection with db
-
-    # outputFile.close()
 
     return
 
@@ -47,7 +50,6 @@ def getConfigData():
     configLocation = "../config\config.json"
     configFile = open(configLocation, "r")
     configData = configFile.read()
-    # print(configData)
     return configData
 
 
@@ -55,10 +57,8 @@ def getConfigData():
 def getRoot(configData):
 
     data = json.loads(configData)
-    # print(data)
 
     rootLocation = str(data["JSON_PATH"])
-    # print("Root location is: " + rootLocation)
 
     return Path(rootLocation)
 
@@ -72,13 +72,15 @@ def iterateFiles(root):
 
     # Create a list for all json files in the folder
     # Not including the non "UTF-8" files
-    fileLocations = [f for f in root.glob('**/*.json') if f.is_file() and not f.name.startswith("._")]
+    fileLocations = []
+    folders = root.glob('./!facebook-backup*')
+    fileLocations = [f for f in root.glob('**/*.json') if f.is_file() and not f.name.startswith("._") and f not in root.glob('facebook-backup/**')]
     fileCount = fileLocations.__sizeof__()
 
     documents = []  # All the individual documents to be added to the database
     docCount2 = 0
     for currentFileLocation in fileLocations:
-        # print(currentFileLocation)
+
         jsonDicts = readJSON(currentFileLocation)
         for dict in jsonDicts:
             documents.append(dict)
@@ -94,7 +96,6 @@ def readJSON(fileName):
 
     currentFile = open(fileName, "r")
     contents = currentFile.read()
-    # print(contents)
     jsonDicts = []
 
     try:
@@ -105,44 +106,11 @@ def readJSON(fileName):
             jsonDicts.append(data)
 
     except ValueError:
+
         print("Value Error! There is a problem with the json file! ")
+        # pass
 
     currentFile.close()
-    # print(jsonDicts)
     return jsonDicts
 
-
-def createDB():
-
-    client = MongoClient()
-    DB = client["DataInJectionDB"]
-
-    collection1 = DB["Requests"]
-
-    return client, DB, collection1
-
-
-# Test if an arbitrarily selected file can be read
-def test():
-
-    fileName = r"..\data\requests\facebook-backup\2015\11\24\zed-log\10-requests.json"
-    testFile = open(fileName, "r")
-    contents = testFile.read()
-    #print(contents)
-    try:
-        lines = contents.splitlines()
-        for line in lines:
-            data = json.loads(line)
-            print(data)
-
-    except ValueError:
-        print("lmao")
-
-    testFile.close()
-    return
-
-# test()
-main()
-# getRoot(getConfigData())
-# readJSON(r"..\data\requests\facebook-backup\2015\11\24\zed-log\10-requests.json")
 

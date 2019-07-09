@@ -1,11 +1,12 @@
 from pymongo import MongoClient
 import json
+import pymongo.errors
 import pymongo
 
 
 class DBMS:
 
-    def _init_(self, collectionName):
+    def __init__(self, collectionName):
 
         self.configData = self.getConfigData()
 
@@ -19,9 +20,19 @@ class DBMS:
 
         self.currentCollection = self.DB[collectionName]
 
-        index = self.currentCollection.create_index([("request_id", pymongo.ASCENDING)],
-                                                             unique = True)
-        sorted(list(self.DB.index_information()))
+        indexName = "Index1"
+        self.currentCollection.create_index([("request_id", 1)], unique = True, background = True)
+        # sorted(list(self.DB.currentCollection.index_information()))
+
+    # Insert document to the current collection
+    def insertDocument(self, document):
+
+        try:
+            self.currentCollection.insert_one(document)
+
+        except pymongo.errors.DuplicateKeyError:
+
+            print("Duplicate Request ID! ", document["request_id"])
 
     # Get config data from the config file
     def getConfigData(self):
@@ -29,13 +40,11 @@ class DBMS:
         configLocation = "../config\config.json"
         configFile = open(configLocation, "r")
         configData = configFile.read()
-        # print(configData)
         return configData
 
     def getInfo(self, configData, configKey):
 
         data = json.loads(configData)
-        # print(data)
 
         field = str(data[configKey])
 
