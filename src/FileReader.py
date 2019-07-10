@@ -1,156 +1,113 @@
 import json
 from pathlib import Path
 import os as os
-import time
-from src.DBMS import DBMS as DBMS
-import threading
-import multiprocessing as mp
-import multiprocessing.pool as pool
 
 
-def main():
+class FileReader:
 
-    start = time.time()
+    def __init__(self) :
 
-    # Create processes equal to the number of cpu's
-    processCount = mp.cpu_count()
-    print("The number of threads is: ", processCount)
-    processes = pool.Pool(processCount)
+        self.configData = self.getConfigData()
+        self.root = self.getRoot()
 
-    # Get config data
-    configData = getConfigData()
+        self.files = []
+        self.documents = []
 
-    # Get the root from the config file
-    root = getRoot(configData)
+    # Get config data from the config file
+    def getConfigData(self):
 
-    initTime = time.time()
-    print("Pre file reading duration is: " , initTime - start)
+        configLocation = "../config\config.json"
+        configFile = open(configLocation, "r")
+        configData = configFile.read()
+        return configData
 
-    # Iterate through every file in the folder
-    files, documents = processes.map(iterateFiles, root, configData)
+    # Get root path from the config data as relative path
+    def getRoot(self):
 
-    processes.close()
+        data = json.loads(self.configData)
 
-    backupDocs = []
-    fileLocations = [f for f in root.glob("facebook-backup/**/*") if
-                     f.is_file() and not f.name.startswith("._") and f.name.endswith(".json")]
-    for currentFile in fileLocations:
-        jsonDicts = readJSON(currentFile)
+        rootLocation = str(data["JSON_PATH"])
+
+        return Path(rootLocation)
+
+    # Get the .json files to be read in a list
+    def getFiles(self):
+
+        backupFolder = self.getInfo("BACKUP_FOLDER")
+        print("Backup folder: ", backupFolder)
+
+        for currentPath, d, f in os.walk(self.root):
+            for currentFileName in f:
+
+                if '.json' in currentFileName and not currentFileName.startswith('._') and backupFolder not in currentPath:
+                    self.files.append(os.path.join(currentPath, currentFileName))
+
+        return
+
+    # Iterate through every "UTF-8" .json file in the folder
+    # Write their relative paths to a list
+    # Print the paths to the console
+    def iterateFiles(self, files):
+
+        for file in files:
+            jsonDicts = self.readJSON(file)
+            for dict in jsonDicts:
+                self.documents.append(dict)
+
+        return
+
+    # Read the json file line by line and return the dictionaries as a list
+    def readJSON(self, fileName):
+
+        currentFile = open(fileName, "r")
+        contents = currentFile.read()
+        jsonDicts = []
+
+        try:
+            lines = contents.splitlines()
+            for line in lines:
+                data = json.loads(line)
+                # print(data)
+                jsonDicts.append(data)
+
+        except ValueError:
+
+            print("Value Error! There is a problem with the json file! ")
+            # pass
+
+        currentFile.close()
+        return jsonDicts
+
+    # Get wanted info from config data
+    def getInfo(self, configKey):
+
+        data = json.loads(self.configData)
+        field = str(data[configKey])
+
+        return field
+
+    # Test methods
+    def test(self):
+
+        print("Config data = ", self.configData)
+        print("Root = ", self.root)
+
+        self.getFiles()
+        print(self.files)
+
+        jsonDicts = self.readJSON(self.files[0])
         for dict in jsonDicts:
-            backupDocs.append(dict)
+            self.documents.append(dict)
 
-    backupSize = backupDocs.__len__()
-    print("Backup size = ", backupSize)
+        print(self.documents)
 
-    readTime = time.time()
-    print("File reading duration is: ", readTime - initTime)
-
-    # Connect to db
-    collectionName = getInfo(configData, "COLLECTION_NAME")
-    DB = DBMS(collectionName)
-
-    duplicateCount = 0
-    for document in documents:
-        if DB.insertDocument(document):  # If the document is duplicate
-            duplicateCount += 1
-
-    print("Duplicate count = ", duplicateCount)
-
-    injectionTime = time.time()
-    print("Database injection time is: ", injectionTime - readTime)
-
-    DB.close()
-
-    return
+        return
 
 
-# Get config data from the config file
-def getConfigData():
-
-    configLocation = "../config\config.json"
-    configFile = open(configLocation, "r")
-    configData = configFile.read()
-    return configData
+# fileReader = FileReader()
+# fileReader.test()
 
 
-# Get root path from the config data as relative path
-def getRoot(configData):
-
-    data = json.loads(configData)
-
-    rootLocation = str(data["JSON_PATH"])
-
-    return Path(rootLocation)
-
-
-# Iterate through every "UTF-8" .json file in the folder
-# Write their relative paths to a list
-# Print the paths to the console
-def iterateFiles(root, configData):
-
-    documents = []  # All the individual documents to be added to the database
-    docCounter = 0  # Counts the times a document is added to documents
-
-    files = []  # All the .json files to be read
-    fileCounter = 0  # Counts the times a file is read
-
-    backupFolder = getInfo(configData, "BACKUP_FOLDER")
-    print("Backup folder: ", backupFolder)
-
-    for currentPath, d, f in os.walk(root):
-        for currentFileName in f:
-
-            if '.json' in currentFileName and not currentFileName.startswith('._') and backupFolder not in currentPath:
-                files.append(os.path.join(currentPath, currentFileName))
-                fileCounter += 1
-
-                jsonDicts = readJSON(currentPath + "\\" + currentFileName)
-                for dict in jsonDicts:
-                    documents.append(dict)
-                    docCounter += 1
-
-    print("File counter =", fileCounter)
-    print("File List size = ", files.__len__())
-    print("Doc counter = ", docCounter)
-    print("Doc List size = ", documents.__len__())
-
-    return files, documents
-
-
-# Read the json file line by line and return the dictionaries as a list
-def readJSON(fileName):
-
-    currentFile = open(fileName, "r")
-    contents = currentFile.read()
-    jsonDicts = []
-
-    try:
-        lines = contents.splitlines()
-        for line in lines:
-            data = json.loads(line)
-            # print(data)
-            jsonDicts.append(data)
-
-    except ValueError:
-
-        print("Value Error! There is a problem with the json file! ")
-        # pass
-
-    currentFile.close()
-    return jsonDicts
-
-
-# Get wanted info from config data
-def getInfo(configData, configKey):
-
-    data = json.loads(configData)
-    field = str(data[configKey])
-
-    return field
-
-
-if __name__ == '__main__':
-    main()
 
 
 

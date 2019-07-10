@@ -62,4 +62,4 @@ class DBMS:
         self.client.close()
 
 
-DB = DBMS("Requests")
+# DB = DBMS("Requests")
