@@ -4,27 +4,32 @@ import os as os
 import time
 from src.DBMS import DBMS as DBMS
 import threading
-import multiprocessing
+import multiprocessing as mp
+import multiprocessing.pool as pool
 
 
 def main():
 
     start = time.time()
 
-    # threadCount = multiprocessing.cpu_count()
-    # print("The number of threads is: ", threadCount)
+    # Create processes equal to the number of cpu's
+    processCount = mp.cpu_count()
+    print("The number of threads is: ", processCount)
+    processes = pool.Pool(processCount)
 
     # Get config data
     configData = getConfigData()
 
     # Get the root from the config file
-    rootLocation, root = getRoot(configData)
+    root = getRoot(configData)
 
     initTime = time.time()
     print("Pre file reading duration is: " , initTime - start)
 
     # Iterate through every file in the folder
-    files, documents = iterateFiles(root, configData)
+    files, documents = processes.map(iterateFiles, root, configData)
+
+    processes.close()
 
     backupDocs = []
     fileLocations = [f for f in root.glob("facebook-backup/**/*") if
@@ -41,7 +46,8 @@ def main():
     print("File reading duration is: ", readTime - initTime)
 
     # Connect to db
-    DB = DBMS("Requests")
+    collectionName = getInfo(configData, "COLLECTION_NAME")
+    DB = DBMS(collectionName)
 
     duplicateCount = 0
     for document in documents:
@@ -52,8 +58,8 @@ def main():
 
     injectionTime = time.time()
     print("Database injection time is: ", injectionTime - readTime)
-    
-    # End connection with db
+
+    DB.close()
 
     return
 
@@ -74,7 +80,7 @@ def getRoot(configData):
 
     rootLocation = str(data["JSON_PATH"])
 
-    return rootLocation, Path(rootLocation)
+    return Path(rootLocation)
 
 
 # Iterate through every "UTF-8" .json file in the folder
@@ -143,8 +149,8 @@ def getInfo(configData, configKey):
     return field
 
 
-main()
-
+if __name__ == '__main__':
+    main()
 
 
 
