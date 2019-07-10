@@ -10,7 +10,9 @@ class DBMS:
 
         self.configData = self.getConfigData()
 
-        self.client = MongoClient(self.getInfo(self.configData, "CLIENT_URL"))
+        self.client = MongoClient(self.getInfo(self.configData, "CLIENT_URL"),
+                                  username='myUserAdmin',
+                                  password='abc123',)
 
         self.DB = self.client[self.getInfo(self.configData, "DB_NAME")]
 
@@ -60,3 +62,4 @@ class DBMS:
         self.client.close()
 
 
+DB = DBMS("Requests")
