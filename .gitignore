@@ -11,9 +11,3 @@ DataInjection/*
 
 ###Source Data###
 data/requests/*
-
-###SQLITE DB Files###
-sqlite/db/*
-
-###Test Output Files###
-src/output.txt

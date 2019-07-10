@@ -1,5 +1,7 @@
 {
-  "JSON_PATH":"../data/requests",
+  "JSON_PATH": "../data/requests",
   "CLIENT_URL": "mongodb://localhost:27017/",
-  "DB_NAME":"DataInjection"
+  "DB_NAME": "DataInjection",
+  "DB_INDEX": "request_id",
+  "BACKUP_FOLDER": "facebook-backup"
 }

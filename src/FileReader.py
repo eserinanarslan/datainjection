@@ -1,44 +1,58 @@
 import json
 from pathlib import Path
-from pymongo import MongoClient
+import os as os
 import time
 from src.DBMS import DBMS as DBMS
 import threading
 import multiprocessing
 
+
 def main():
 
     start = time.time()
 
-    threadCount = multiprocessing.cpu_count()
-    print("The number of threads is: ", threadCount)
+    # threadCount = multiprocessing.cpu_count()
+    # print("The number of threads is: ", threadCount)
 
     # Get config data
     configData = getConfigData()
 
     # Get the root from the config file
-    root = getRoot(configData)
+    rootLocation, root = getRoot(configData)
+
+    initTime = time.time()
+    print("Pre file reading duration is: " , initTime - start)
+
+    # Iterate through every file in the folder
+    files, documents = iterateFiles(root, configData)
+
+    backupDocs = []
+    fileLocations = [f for f in root.glob("facebook-backup/**/*") if
+                     f.is_file() and not f.name.startswith("._") and f.name.endswith(".json")]
+    for currentFile in fileLocations:
+        jsonDicts = readJSON(currentFile)
+        for dict in jsonDicts:
+            backupDocs.append(dict)
+
+    backupSize = backupDocs.__len__()
+    print("Backup size = ", backupSize)
+
+    readTime = time.time()
+    print("File reading duration is: ", readTime - initTime)
 
     # Connect to db
     DB = DBMS("Requests")
 
-    end1 = time.time()
-    print("Pre file reading duration is: " , end1 - start)
-
-    # Iterate through every file in the folder
-    documents, fileCount, docCount = iterateFiles(root)
-    print("File count is: ", fileCount, "Document count is: ", docCount)
-
-    end2 = time.time()
-    print("File reading duration is: ", end2 - end1)
-
+    duplicateCount = 0
     for document in documents:
-        DB.insertDocument(document)
+        if DB.insertDocument(document):  # If the document is duplicate
+            duplicateCount += 1
 
-    end3 = time.time()
-    print("Database injection time is: ", end3 - end2)
+    print("Duplicate count = ", duplicateCount)
 
-    # Upload printed data to the db
+    injectionTime = time.time()
+    print("Database injection time is: ", injectionTime - readTime)
+    
     # End connection with db
 
     return
@@ -60,35 +74,41 @@ def getRoot(configData):
 
     rootLocation = str(data["JSON_PATH"])
 
-    return Path(rootLocation)
+    return rootLocation, Path(rootLocation)
 
 
 # Iterate through every "UTF-8" .json file in the folder
 # Write their relative paths to a list
 # Print the paths to the console
-def iterateFiles(root):
-
-    fileCount = 0  # Number of UTF-8 json files in the folder
-
-    # Create a list for all json files in the folder
-    # Not including the non "UTF-8" files
-    fileLocations = []
-    folders = root.glob('./!facebook-backup*')
-    fileLocations = [f for f in root.glob('**/*.json') if f.is_file() and not f.name.startswith("._") and f not in root.glob('facebook-backup/**')]
-    fileCount = fileLocations.__sizeof__()
+def iterateFiles(root, configData):
 
     documents = []  # All the individual documents to be added to the database
-    docCount2 = 0
-    for currentFileLocation in fileLocations:
+    docCounter = 0  # Counts the times a document is added to documents
 
-        jsonDicts = readJSON(currentFileLocation)
-        for dict in jsonDicts:
-            documents.append(dict)
-            docCount2 += 1
+    files = []  # All the .json files to be read
+    fileCounter = 0  # Counts the times a file is read
 
-    docCount = documents.__len__()
-    print("Doc counter = ", docCount2)
-    return documents, fileCount, docCount
+    backupFolder = getInfo(configData, "BACKUP_FOLDER")
+    print("Backup folder: ", backupFolder)
+
+    for currentPath, d, f in os.walk(root):
+        for currentFileName in f:
+
+            if '.json' in currentFileName and not currentFileName.startswith('._') and backupFolder not in currentPath:
+                files.append(os.path.join(currentPath, currentFileName))
+                fileCounter += 1
+
+                jsonDicts = readJSON(currentPath + "\\" + currentFileName)
+                for dict in jsonDicts:
+                    documents.append(dict)
+                    docCounter += 1
+
+    print("File counter =", fileCounter)
+    print("File List size = ", files.__len__())
+    print("Doc counter = ", docCounter)
+    print("Doc List size = ", documents.__len__())
+
+    return files, documents
 
 
 # Read the json file line by line and return the dictionaries as a list
@@ -112,5 +132,19 @@ def readJSON(fileName):
 
     currentFile.close()
     return jsonDicts
+
+
+# Get wanted info from config data
+def getInfo(configData, configKey):
+
+    data = json.loads(configData)
+    field = str(data[configKey])
+
+    return field
+
+
+main()
+
+
 
 

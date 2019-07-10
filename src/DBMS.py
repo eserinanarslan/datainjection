@@ -14,25 +14,29 @@ class DBMS:
 
         self.DB = self.client[self.getInfo(self.configData, "DB_NAME")]
 
-        # collections = self.DB.list_collection_names()
-        # if collectionName in collections:
-            # self.currentCollection = self.DB.get_collection(collectionName)
+        self.collections = self.DB.collection_names()
+        if collectionName in self.collections:
+            self.DB.drop_collection(collectionName)
+            print("Collection dropped!")
 
         self.currentCollection = self.DB[collectionName]
 
-        indexName = "Index1"
-        self.currentCollection.create_index([("request_id", 1)], unique = True, background = True)
-        # sorted(list(self.DB.currentCollection.index_information()))
+        DB_INDEX = self.getInfo(self.configData, "DB_INDEX")
+        self.currentCollection.create_index([(DB_INDEX, 1)], unique = True, background = True)
 
     # Insert document to the current collection
     def insertDocument(self, document):
+
+        isDuplicate = False
 
         try:
             self.currentCollection.insert_one(document)
 
         except pymongo.errors.DuplicateKeyError:
+            # print("Duplicate Request ID! ", document["request_id"])
+            isDuplicate = True
 
-            print("Duplicate Request ID! ", document["request_id"])
+        return isDuplicate
 
     # Get config data from the config file
     def getConfigData(self):
@@ -42,12 +46,17 @@ class DBMS:
         configData = configFile.read()
         return configData
 
+    # Get wanted info from config data
     def getInfo(self, configData, configKey):
 
         data = json.loads(configData)
-
         field = str(data[configKey])
 
         return field
+
+    # Terminate DB connection
+    def close(self):
+
+        self.client.close()
 
 
