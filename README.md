@@ -14,7 +14,7 @@ MongoDB is used as the database program
 
 * The Python libraries listed in "requirements.txt"  
 
-* A data folder named "data" which includes a subfolder named "requests"  
+* A data folder named "data" which includes a sub-folder named "requests"  
 
 # How to Run the Program  
 
@@ -25,7 +25,7 @@ MongoDB is used as the database program
 3. The required libraries should be downloaded, to do this:
 * Open the project folder in the terminal  
 * Enter command < pip install -r requirements.txt >  
-* Run FileReader.py with Python or a Python Editor  
+* Run Main.py with Python or a Python Editor  
 
 The program runs for approximately 12 minutes, please be patient  
 The data will be written to a database  

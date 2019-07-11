@@ -33,6 +33,8 @@ class FileReader:
     # Get the .json files to be read in a list
     def getFiles(self):
 
+        tempFiles = []
+
         backupFolder = self.getInfo("BACKUP_FOLDER")
         print("Backup folder: ", backupFolder)
 
@@ -40,9 +42,9 @@ class FileReader:
             for currentFileName in f:
 
                 if '.json' in currentFileName and not currentFileName.startswith('._') and backupFolder not in currentPath:
-                    self.files.append(os.path.join(currentPath, currentFileName))
+                    tempFiles.append(os.path.join(currentPath, currentFileName))
 
-        return
+        return tempFiles
 
     # Iterate through every "UTF-8" .json file in the folder
     # Write their relative paths to a list
@@ -85,6 +87,11 @@ class FileReader:
         field = str(data[configKey])
 
         return field
+
+    def setDocuments(self, documents):
+
+        self.documents = documents
+        return
 
     # Test methods
     def test(self):

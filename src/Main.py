@@ -2,8 +2,9 @@ import json
 from pathlib import Path
 import os as os
 import time
-from src.DBMS import DBMS as DBMS
-from src.FileReader import FileReader as FileReader
+
+from src.DBMS import DBMS as dbms
+from src.FileReader import FileReader as fr
 import multiprocessing as mp
 import multiprocessing.pool as pool
 
@@ -12,25 +13,30 @@ def main():
 
     start = time.time()
 
-    fileReader = FileReader()
+    fileReader = fr()
 
     # Create processes equal to the number of cpu's
     processCount = mp.cpu_count()
     print("The number of threads is: ", processCount)
-    processes = pool.Pool(processCount)
 
     initTime = time.time()
-    print("Pre file reading duration is: " , initTime - start)
+    print("Pre file reading duration is: ", initTime - start)
 
     # Add files to be read to a list
-    fileReader.getFiles()
-    files = fileReader.files
+    files = fileReader.getFiles()
+    print(files)
+    print(files[0])
+
+    # fileReader.iterateFiles(files)
+    # documents = fileReader.documents
 
     # Iterate through every file in the folder
+    processes = pool.Pool(processCount)
     processes.map(fileReader.iterateFiles, files)
     documents = fileReader.documents
 
     processes.close()
+
 
     """backupDocs = []
     fileLocations = [f for f in root.glob("facebook-backup/**/*") if
@@ -49,7 +55,7 @@ def main():
 
     # Connect to db
     collectionName = fileReader.getInfo("COLLECTION_NAME")
-    DB = DBMS(collectionName)
+    DB = dbms(collectionName)
 
     duplicateCount = 0
     for document in documents:
@@ -64,6 +70,41 @@ def main():
     DB.close()
 
     return
+
+
+def iterateFiles(files):
+
+    documents = []
+    for file in files:
+        jsonDicts = readJSON(file)
+        for dict in jsonDicts:
+            documents.append(dict)
+
+    return documents
+
+
+def readJSON(fileName):
+
+    print("Current file: ", fileName)
+    currentFile = open(fileName, "r")
+    contents = currentFile.read()
+    jsonDicts = []
+
+    try:
+        lines = contents.splitlines()
+        for line in lines:
+            data = json.loads(line)
+            # print(data)
+            jsonDicts.append(data)
+
+    except ValueError:
+
+        print("Value Error! There is a problem with the json file! ")
+        # pass
+
+    print("File done!")
+    currentFile.close()
+    return jsonDicts
 
 
 if __name__ == '__main__':
