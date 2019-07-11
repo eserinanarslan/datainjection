@@ -43,7 +43,7 @@ class DBMS:
     # Get config data from the config file
     def getConfigData(self):
 
-        configLocation = "../config\config.json"
+        configLocation = "config\config.json"
         configFile = open(configLocation, "r")
         configData = configFile.read()
         return configData
