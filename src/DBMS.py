@@ -11,8 +11,8 @@ class DBMS:
         self.configData = self.getConfigData()
 
         self.client = MongoClient(self.getInfo(self.configData, "CLIENT_URL"),
-                                  username='myUserAdmin',
-                                  password='abc123',)
+                                  username=self.getInfo(self.configData, "USER_NAME"),
+                                  password=self.getInfo(self.configData, "PASSWORD"),)
 
         self.DB = self.client[self.getInfo(self.configData, "DB_NAME")]
 
@@ -24,7 +24,7 @@ class DBMS:
         self.currentCollection = self.DB[collectionName]
 
         DB_INDEX = self.getInfo(self.configData, "DB_INDEX")
-        self.currentCollection.create_index([(DB_INDEX, 1)], unique = True, background = True)
+        self.currentCollection.create_index([(DB_INDEX, 1)], unique=True, background=True)
 
     # Insert document to the current collection
     def insertDocument(self, document):
@@ -43,7 +43,7 @@ class DBMS:
     # Get config data from the config file
     def getConfigData(self):
 
-        configLocation = "../config\config.json"
+        configLocation = "config\config.json"
         configFile = open(configLocation, "r")
         configData = configFile.read()
         return configData
@@ -60,6 +60,3 @@ class DBMS:
     def close(self):
 
         self.client.close()
-
-
-# 3DB = DBMS("Requests")

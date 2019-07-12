@@ -1,8 +1,4 @@
-import json
-from pathlib import Path
-import os as os
 import time
-
 from src.DBMS import DBMS as dbms
 from src.FileReader import FileReader as fr
 import multiprocessing as mp
@@ -16,39 +12,29 @@ def main():
     fileReader = fr()
 
     # Create processes equal to the number of cpu's
-    processCount = mp.cpu_count()
+    if mp.cpu_count() >= 2:
+        processCount = mp.cpu_count() - 1
+
+    else:
+        processCount = 1
+
     print("The number of threads is: ", processCount)
 
     initTime = time.time()
     print("Pre file reading duration is: ", initTime - start)
 
-    # Add files to be read to a list
-    files = fileReader.getFiles()
-    print(files)
-    print(files[0])
+    fileReader.getFiles()
+    files = fileReader.files
+    documents = []
 
-    # fileReader.iterateFiles(files)
-    # documents = fileReader.documents
-
-    # Iterate through every file in the folder
     processes = pool.Pool(processCount)
-    processes.map(fileReader.iterateFiles, files)
-    documents = fileReader.documents
+    jsonDicts = processes.map(fileReader.readJSON, files)
+
+    for dict in jsonDicts:
+        for document in dict:
+            documents.append(document)
 
     processes.close()
-
-
-    """backupDocs = []
-    fileLocations = [f for f in root.glob("facebook-backup/**/*") if
-                     f.is_file() and not f.name.startswith("._") and f.name.endswith(".json")]
-    for currentFile in fileLocations:
-        jsonDicts = readJSON(currentFile)
-        for dict in jsonDicts:
-            backupDocs.append(dict)
-
-    backupSize = backupDocs.__len__()
-    print("Backup size = ", backupSize)
-    """
 
     readTime = time.time()
     print("File reading duration is: ", readTime - initTime)
@@ -62,7 +48,7 @@ def main():
         if DB.insertDocument(document):  # If the document is duplicate
             duplicateCount += 1
 
-    print("Duplicate count = ", duplicateCount)
+    # print("Duplicate count = ", duplicateCount)
 
     injectionTime = time.time()
     print("Database injection time is: ", injectionTime - readTime)
@@ -72,39 +58,22 @@ def main():
     return
 
 
-def iterateFiles(files):
+# Count the number of .json files in facebook-backup
+def countBackup(root):
 
-    documents = []
-    for file in files:
-        jsonDicts = readJSON(file)
+    backupDocs = []
+    fileReader = fr()
+    fileLocations = [f for f in root.glob("facebook-backup/**/*") if
+                     f.is_file() and not f.name.startswith("._") and f.name.endswith(".json")]
+    for currentFile in fileLocations:
+        jsonDicts = fileReader.readJSON(currentFile)
         for dict in jsonDicts:
-            documents.append(dict)
+            backupDocs.append(dict)
 
-    return documents
+    backupSize = backupDocs.__len__()
+    print("Backup size = ", backupSize)
 
-
-def readJSON(fileName):
-
-    print("Current file: ", fileName)
-    currentFile = open(fileName, "r")
-    contents = currentFile.read()
-    jsonDicts = []
-
-    try:
-        lines = contents.splitlines()
-        for line in lines:
-            data = json.loads(line)
-            # print(data)
-            jsonDicts.append(data)
-
-    except ValueError:
-
-        print("Value Error! There is a problem with the json file! ")
-        # pass
-
-    print("File done!")
-    currentFile.close()
-    return jsonDicts
+    return
 
 
 if __name__ == '__main__':

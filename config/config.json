@@ -1,8 +1,10 @@
 {
-  "JSON_PATH": "../data/requests",
+  "JSON_PATH": "data/requests",
   "CLIENT_URL": "mongodb://localhost:27017/",
   "DB_NAME": "DataInjection",
   "COLLECTION_NAME": "Requests",
   "DB_INDEX": "request_id",
-  "BACKUP_FOLDER": "facebook-backup"
+  "BACKUP_FOLDER": "facebook-backup",
+  "USER_NAME": "myUserAdmin",
+  "PASSWORD": "abc123"
 }

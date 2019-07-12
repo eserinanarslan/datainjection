@@ -13,10 +13,13 @@ class FileReader:
         self.files = []
         self.documents = []
 
+        print("FileReader created!")
+        print("Root = ", self.root)
+
     # Get config data from the config file
     def getConfigData(self):
 
-        configLocation = "../config\config.json"
+        configLocation = "config/config.json"
         configFile = open(configLocation, "r")
         configData = configFile.read()
         return configData
@@ -33,37 +36,31 @@ class FileReader:
     # Get the .json files to be read in a list
     def getFiles(self):
 
-        tempFiles = []
-
         backupFolder = self.getInfo("BACKUP_FOLDER")
         print("Backup folder: ", backupFolder)
 
-        for currentPath, d, f in os.walk(self.root):
-            for currentFileName in f:
+        for currentPath, directory, files in os.walk(self.root):
+
+            for currentFileName in files:
 
                 if '.json' in currentFileName and not currentFileName.startswith('._') and backupFolder not in currentPath:
-                    tempFiles.append(os.path.join(currentPath, currentFileName))
 
-        return tempFiles
+                    self.files.append(os.path.join(currentPath, currentFileName))
 
-    # Iterate through every "UTF-8" .json file in the folder
-    # Write their relative paths to a list
-    # Print the paths to the console
-    def iterateFiles(self, files):
+        return
 
-        for file in files:
-            jsonDicts = self.readJSON(file)
-            for dict in jsonDicts:
-                self.documents.append(dict)
+    def addDocument(self, document):
 
+        self.documents.append(document)
         return
 
     # Read the json file line by line and return the dictionaries as a list
     def readJSON(self, fileName):
 
-        currentFile = open(fileName, "r")
-        contents = currentFile.read()
         jsonDicts = []
+        currentFile = open(fileName, "r")
+        # print(currentFile)
+        contents = currentFile.read()
 
         try:
             lines = contents.splitlines()
@@ -110,9 +107,6 @@ class FileReader:
 
         return
 
-
-# fileReader = FileReader()
-# fileReader.test()
 
 
 
