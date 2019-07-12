@@ -4,5 +4,7 @@
   "DB_NAME": "DataInjection",
   "COLLECTION_NAME": "Requests",
   "DB_INDEX": "request_id",
-  "BACKUP_FOLDER": "facebook-backup"
+  "BACKUP_FOLDER": "facebook-backup",
+  "USER_NAME": "myUserAdmin",
+  "PASSWORD": "abc123"
 }

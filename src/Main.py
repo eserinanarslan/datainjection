@@ -1,8 +1,4 @@
-import json
-from pathlib import Path
-import os as os
 import time
-
 from src.DBMS import DBMS as dbms
 from src.FileReader import FileReader as fr
 import multiprocessing as mp
@@ -27,29 +23,16 @@ def main():
     initTime = time.time()
     print("Pre file reading duration is: ", initTime - start)
 
-    # Add files to be read to a list
-    # fileReader.getFiles()
-    # files = fileReader.files
-    # print(files)
-    # print(files[0])
-
-    # fileReader.iterateFiles(files)
-    # documents = fileReader.documents
-
-    # Iterate through every file in the folder
-    processes = pool.Pool(processCount)
-
     fileReader.getFiles()
     files = fileReader.files
-
     documents = []
+
+    processes = pool.Pool(processCount)
     jsonDicts = processes.map(fileReader.readJSON, files)
 
     for dict in jsonDicts:
         for document in dict:
             documents.append(document)
-
-    print(" First element = ", documents[0])
 
     processes.close()
 
@@ -65,7 +48,7 @@ def main():
         if DB.insertDocument(document):  # If the document is duplicate
             duplicateCount += 1
 
-    print("Duplicate count = ", duplicateCount)
+    # print("Duplicate count = ", duplicateCount)
 
     injectionTime = time.time()
     print("Database injection time is: ", injectionTime - readTime)
@@ -75,6 +58,7 @@ def main():
     return
 
 
+# Count the number of .json files in facebook-backup
 def countBackup(root):
 
     backupDocs = []

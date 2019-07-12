@@ -39,13 +39,12 @@ class FileReader:
         backupFolder = self.getInfo("BACKUP_FOLDER")
         print("Backup folder: ", backupFolder)
 
-        for currentPath, d, f in os.walk(self.root):
-            # print(currentPath, f, d)
-            for currentFileName in f:
-                # print(currentPath, currentFileName)
+        for currentPath, directory, files in os.walk(self.root):
+
+            for currentFileName in files:
 
                 if '.json' in currentFileName and not currentFileName.startswith('._') and backupFolder not in currentPath:
-                    # print(currentFileName)
+
                     self.files.append(os.path.join(currentPath, currentFileName))
 
         return
@@ -53,18 +52,6 @@ class FileReader:
     def addDocument(self, document):
 
         self.documents.append(document)
-        return
-
-    # Iterate through every "UTF-8" .json file in the folder
-    # Write their relative paths to a list
-    # Print the paths to the console
-    def iterateFiles(self, files):
-
-        for file in files:
-            jsonDicts = self.readJSON(file)
-            for dict in jsonDicts:
-                self.documents.append(dict)
-
         return
 
     # Read the json file line by line and return the dictionaries as a list
@@ -120,9 +107,6 @@ class FileReader:
 
         return
 
-
-# fileReader = FileReader()
-# fileReader.test()
 
 
 
