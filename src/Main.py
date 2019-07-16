@@ -3,6 +3,8 @@ from src.DBMS import DBMS as dbms
 from src.FileReader import FileReader as fr
 import multiprocessing as mp
 import multiprocessing.pool as pool
+from bson import Code
+from pymongo import MongoClient
 
 
 def main():
@@ -45,11 +47,18 @@ def main():
 
     """
     duplicateCount = 0
+    duplicates = []
     for document in documents:
         if DB.insertDocument(document):  # If the document is duplicate
             duplicateCount += 1
+            print("Document = ", document)
+            duplicates.append(document)
+            duplicates.append(DB.currentCollection.find({"request_id": document["request_id"]}))
+            print("DB = ", DB.currentCollection.find_one({"request_id": document["request_id"]}))
 
-    # print("Duplicate count = ", duplicateCount)
+    print("Duplicate count = ", duplicateCount)
+    # print(duplicates)
+    print("Duplicates Length = ", duplicates.__len__())
     """
 
     DB.insertDocuments(documents)
@@ -80,6 +89,25 @@ def countBackup(root):
     return
 
 
+def get_keys():
+
+    fileReader = fr()
+
+    configData = fileReader.getConfigData()
+
+    client = MongoClient(fileReader.getInfo("CLIENT_URL"))
+
+    db = client[fileReader.getInfo("DB_NAME")]
+    collectionName = fileReader.getInfo("COLLECTION_NAME")
+
+    map = Code("function() { for (var key in this) { emit(key, null); } }")
+    reduce = Code("function(key, stuff) { return null; }")
+    result = db[collectionName].map_reduce(map, reduce, "myresults")
+    print(result.distinct('_id'))
+    return result.distinct('_id')
+
+
 if __name__ == '__main__':
 
     main()
+    # get_keys()

@@ -10,6 +10,7 @@ class DBMS:
 
         self.configData = self.getConfigData()
 
+        # CHANGE USERNAME AND PASSWORD!!!!
         self.client = MongoClient(self.getInfo(self.configData, "CLIENT_URL"),
                                   username=self.getInfo(self.configData, "USER_NAME"),
                                   password=self.getInfo(self.configData, "PASSWORD"),)
