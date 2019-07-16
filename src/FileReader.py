@@ -5,7 +5,7 @@ import os as os
 
 class FileReader:
 
-    def __init__(self) :
+    def __init__(self):
 
         self.configData = self.getConfigData()
         self.root = self.getRoot()

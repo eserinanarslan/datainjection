@@ -40,6 +40,15 @@ class DBMS:
 
         return isDuplicate
 
+    # Insert a list of documents onordered
+    def insertDocuments(self, documents):
+
+        try:
+            self.currentCollection.insert_many(documents, ordered=False)
+
+        except pymongo.errors.BulkWriteError as error:
+            print(error)
+
     # Get config data from the config file
     def getConfigData(self):
 
