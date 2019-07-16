@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1a364613-9e43-44bc-8272-f5be0ae55f9d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/AttributeGetter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/PostgreDB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DBMS.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBMS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.py" afterDir="false" />
-    </list>
+    <list default="true" id="1a364613-9e43-44bc-8272-f5be0ae55f9d" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +14,7 @@
         <entry file="file://$PROJECT_DIR$/src/FileReader.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="187">
-              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+              <caret line="11" selection-start-line="11" selection-end-line="11" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -34,7 +26,7 @@
         <entry file="file://$PROJECT_DIR$/src/Main.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="76">
-              <caret line="89" lean-forward="true" selection-start-line="89" selection-end-line="89" />
+              <caret line="89" selection-start-line="89" selection-end-line="89" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -58,7 +50,7 @@
         <entry file="file://$PROJECT_DIR$/src/PostgreDB.py">
           <provider selected="true" editor-type-id="text-editor">
             <state>
-              <caret line="21" column="34" lean-forward="true" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+              <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -70,7 +62,7 @@
         <entry file="file://$PROJECT_DIR$/src/AttributeGetter.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
-              <caret line="8" column="33" lean-forward="true" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
+              <caret line="8" column="33" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -292,8 +284,8 @@
       <item itemvalue="Python.DBMS" />
       <item itemvalue="Python.FileReader" />
       <item itemvalue="Python.Main" />
-      <item itemvalue="Python.test" />
       <item itemvalue="Python.PostgreDB" />
+      <item itemvalue="Python.test" />
     </list>
     <recent_temporary>
       <list>
@@ -336,7 +328,7 @@
       <workItem from="1562841161895" duration="6059000" />
       <workItem from="1562930338378" duration="1175000" />
       <workItem from="1563265241532" duration="23000" />
-      <workItem from="1563265286642" duration="13031000" />
+      <workItem from="1563265286642" duration="13102000" />
     </task>
     <task id="LOCAL-00001" summary=" Starting DataInjection">
       <created>1561986713849</created>
@@ -534,11 +526,18 @@
       <option name="project" value="LOCAL" />
       <updated>1563265585239</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary=" Fast commit, attribute names, duplicate check">
+      <created>1563283803062</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1563283803062</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="144581000" />
+    <option name="totallyTimeSpent" value="144652000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -551,7 +550,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21983914" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -624,7 +622,8 @@
     <MESSAGE value=" Try running in another pc" />
     <MESSAGE value=" Multithreading and dbms done" />
     <MESSAGE value=" Clear names" />
-    <option name="LAST_COMMIT_MESSAGE" value=" Clear names" />
+    <MESSAGE value=" Fast commit, attribute names, duplicate check" />
+    <option name="LAST_COMMIT_MESSAGE" value=" Fast commit, attribute names, duplicate check" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/datainjection$PostgreDB.coverage" NAME="PostgreDB Coverage Results" MODIFIED="1563269540958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -803,14 +802,14 @@
     <entry file="file://$PROJECT_DIR$/src/AttributeGetter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
-          <caret line="8" column="33" lean-forward="true" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
+          <caret line="8" column="33" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/FileReader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
-          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
@@ -820,7 +819,7 @@
     <entry file="file://$PROJECT_DIR$/src/PostgreDB.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret line="21" column="34" lean-forward="true" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+          <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
@@ -837,7 +836,7 @@
     <entry file="file://$PROJECT_DIR$/src/Main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
-          <caret line="89" lean-forward="true" selection-start-line="89" selection-end-line="89" />
+          <caret line="89" selection-start-line="89" selection-end-line="89" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
