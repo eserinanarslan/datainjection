@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1a364613-9e43-44bc-8272-f5be0ae55f9d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DBMS.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBMS.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/FileReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileReader.py" afterDir="false" />
@@ -19,8 +20,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/FileReader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
-              <caret line="108" selection-start-line="108" selection-end-line="108" />
+            <state relative-caret-position="-1343">
+              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -28,14 +29,26 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
+            <state relative-caret-position="-941">
+              <caret line="15" column="41" selection-start-line="15" selection-start-column="41" selection-end-line="15" selection-end-column="41" />
               <folding>
-                <element signature="e#1#12#0" expanded="true" />
+                <element signature="e#0#11#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="-314">
+                <caret line="1" selection-start-line="1" selection-end-line="1" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -43,8 +56,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/DBMS.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+            <state relative-caret-position="742">
+              <caret line="49" column="23" lean-forward="true" selection-start-line="49" selection-start-column="23" selection-end-line="49" selection-end-column="23" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -52,11 +65,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/config/config.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+            <state relative-caret-position="119">
+              <caret line="7" column="25" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -97,11 +110,11 @@
         <option value="$PROJECT_DIR$/data/requests/2015/09/30/zed-log/._07-requests.json" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/src/FileReader.py" />
-        <option value="$PROJECT_DIR$/config/config.json" />
-        <option value="$PROJECT_DIR$/src/DBMS.py" />
         <option value="$PROJECT_DIR$/src/Main.py" />
+        <option value="$PROJECT_DIR$/src/FileReader.py" />
+        <option value="$PROJECT_DIR$/src/DBMS.py" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/config/config.json" />
       </list>
     </option>
   </component>
@@ -127,17 +140,6 @@
               <item name="datainjection" type="b2602c69:ProjectViewProjectNode" />
               <item name="datainjection" type="462c0819:PsiDirectoryNode" />
               <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="datainjection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="datainjection" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="datainjection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="datainjection" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="requests" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="datainjection" type="b2602c69:ProjectViewProjectNode" />
@@ -304,7 +306,9 @@
       <workItem from="1562826628755" duration="7854000" />
       <workItem from="1562837148330" duration="3964000" />
       <workItem from="1562841161895" duration="6059000" />
-      <workItem from="1562930338378" duration="1175000" />
+      <workItem from="1562930338378" duration="2059000" />
+      <workItem from="1562935987552" duration="614000" />
+      <workItem from="1563256635355" duration="3323000" />
     </task>
     <task id="LOCAL-00001" summary=" Starting DataInjection">
       <created>1561986713849</created>
@@ -495,11 +499,25 @@
       <option name="project" value="LOCAL" />
       <updated>1562849974093</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary=" Small Refactor">
+      <created>1562931542551</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1562931542552</updated>
+    </task>
+    <task id="LOCAL-00029" summary=" Test removed">
+      <created>1562931689975</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1562931689975</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="131527000" />
+    <option name="totallyTimeSpent" value="136348000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -514,12 +532,12 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21715818" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22252011" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32924962" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49396783" visible="true" weight="0.43564355" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49329758" visible="true" weight="0.43564355" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39969373" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -527,8 +545,8 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50603217" side_tool="true" weight="0.43564355" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49888477" weight="0.12022631" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5067024" side_tool="true" weight="0.43564355" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49888477" weight="0.42857143" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.24752475" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -584,12 +602,14 @@
     <MESSAGE value=" Class structure, refactor and threading" />
     <MESSAGE value=" Try running in another pc" />
     <MESSAGE value=" Multithreading and dbms done" />
-    <option name="LAST_COMMIT_MESSAGE" value=" Multithreading and dbms done" />
+    <MESSAGE value=" Small Refactor" />
+    <MESSAGE value=" Test removed" />
+    <option name="LAST_COMMIT_MESSAGE" value=" Test removed" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/datainjection$test.coverage" NAME="test Coverage Results" MODIFIED="1562065846526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/datainjection$FileReader.coverage" NAME="FileReader Coverage Results" MODIFIED="1562839614403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/datainjection$Main.coverage" NAME="Main Coverage Results" MODIFIED="1562931277581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/datainjection$Main.coverage" NAME="Main Coverage Results" MODIFIED="1563261470975" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/datainjection$DBMS.coverage" NAME="DBMS Coverage Results" MODIFIED="1562794276871" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="editorHistoryManager">
@@ -692,13 +712,6 @@
     <entry file="file://$PROJECT_DIR$/data/requests/2017/09/19/zed-log/15-requests.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/DataInjection/Lib/site-packages/pymongo/collection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="89" column="49" selection-start-line="89" selection-start-column="43" selection-end-line="89" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/requests/facebook-backup/2015/11/01/zed-log/07-requests.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -746,13 +759,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test.py" />
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -770,16 +777,6 @@
     <entry file="file://$PROJECT_DIR$/src/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="289">
-            <caret line="17" selection-start-line="17" selection-end-line="17" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Makefile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -787,40 +784,57 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/DataInjection/Lib/site-packages/pymongo/collection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-488">
+          <caret line="702" column="8" selection-start-line="702" selection-start-column="8" selection-end-line="702" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/FileReader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="108" selection-start-line="108" selection-end-line="108" />
+        <state relative-caret-position="-1343">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/config.json">
+    <entry file="file://$PROJECT_DIR$/src/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+        <state relative-caret-position="-941">
+          <caret line="15" column="41" selection-start-line="15" selection-start-column="41" selection-end-line="15" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-314">
+            <caret line="1" selection-start-line="1" selection-end-line="1" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DBMS.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        <state relative-caret-position="742">
+          <caret line="49" column="23" lean-forward="true" selection-start-line="49" selection-start-column="23" selection-end-line="49" selection-end-column="23" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.py">
+    <entry file="file://$PROJECT_DIR$/config/config.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
-          <folding>
-            <element signature="e#1#12#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="119">
+          <caret line="7" column="25" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
         </state>
       </provider>
     </entry>

@@ -43,12 +43,16 @@ def main():
     collectionName = fileReader.getInfo("COLLECTION_NAME")
     DB = dbms(collectionName)
 
+    """
     duplicateCount = 0
     for document in documents:
         if DB.insertDocument(document):  # If the document is duplicate
             duplicateCount += 1
 
     # print("Duplicate count = ", duplicateCount)
+    """
+
+    DB.insertDocuments(documents)
 
     injectionTime = time.time()
     print("Database injection time is: ", injectionTime - readTime)
