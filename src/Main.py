@@ -31,12 +31,27 @@ def main():
 
     processes = pool.Pool(processCount)
     jsonDicts = processes.map(fileReader.readJSON, files)
+    processes.close()
+    counter = 0
 
-    for dict in jsonDicts:
-        for document in dict:
+    for currentDict in jsonDicts:
+        for document in currentDict:
+            removedKeys = []
+            addedAttributes = []
+            for key, attribute in document.items():
+                if type(attribute) is dict:
+                    counter += 1
+                    addedAttributes.append(attribute)
+                    removedKeys.append(key)
+
+            for key in removedKeys:
+                document.pop(key)
+            for attribute in addedAttributes:
+                document.update(attribute)
+
             documents.append(document)
 
-    processes.close()
+    print("Counter = ", counter)
 
     readTime = time.time()
     print("File reading duration is: ", readTime - initTime)
@@ -45,21 +60,45 @@ def main():
     collectionName = fileReader.getInfo("COLLECTION_NAME")
     DB = dbms(collectionName)
 
+
     """
     duplicateCount = 0
     duplicates = []
+    # isUnique = True
+    # nonUnique = 0
     for document in documents:
         if DB.insertDocument(document):  # If the document is duplicate
             duplicateCount += 1
-            print("Document = ", document)
             duplicates.append(document)
             duplicates.append(DB.currentCollection.find({"request_id": document["request_id"]}))
-            print("DB = ", DB.currentCollection.find_one({"request_id": document["request_id"]}))
 
+            
+            for item in document.items():
+                if type(item) is dict:
+                    for otherItem in DB.currentCollection.find_one({"request_id": document["request_id"]}).items():
+                        if type(otherItem) is dict:
+                            otherList = otherItem
+                            break
+
+                    if item != otherList:
+                        isUnique = False
+
+                else:
+                    if item not in DB.currentCollection.find_one({"request_id": document["request_id"]}).items():
+                        isUnique = False
+
+            if not isUnique:
+                print("Document = ", document)
+                print("DB = ", DB.currentCollection.find_one({"request_id": document["request_id"]}))
+                nonUnique += 1
+            
+
+    # print("The number of nonuniques = ", nonUnique)
     print("Duplicate count = ", duplicateCount)
     # print(duplicates)
     print("Duplicates Length = ", duplicates.__len__())
     """
+
 
     DB.insertDocuments(documents)
 
@@ -102,12 +141,12 @@ def get_keys():
 
     map = Code("function() { for (var key in this) { emit(key, null); } }")
     reduce = Code("function(key, stuff) { return null; }")
-    result = db[collectionName].map_reduce(map, reduce, "myresults")
+    result = db[collectionName].map_reduce(map, reduce, "Attributes")
     print(result.distinct('_id'))
     return result.distinct('_id')
 
 
 if __name__ == '__main__':
 
-    main()
-    # get_keys()
+    # main()
+    get_keys()
