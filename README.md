@@ -27,7 +27,7 @@ MongoDB is used as the database program
 * Enter command < pip install -r requirements.txt >  
 * Run Main.py with Python or a Python Editor  
 
-The program runs for approximately 12 minutes, please be patient  
+The program runs for approximately 3 minutes, please be patient  
 The data will be written to a database  
 The specifics of this database can be found in the "config.json" file  
 found in the project folder
