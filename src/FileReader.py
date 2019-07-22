@@ -13,8 +13,8 @@ class FileReader:
         self.files = []
         self.documents = []
 
-        print("FileReader created!")
-        print("Root = ", self.root)
+        # print("FileReader created!")
+        # print("Root = ", self.root)
 
     # Get config data from the config file
     def getConfigData(self):
@@ -37,7 +37,7 @@ class FileReader:
     def getFiles(self):
 
         backupFolder = self.getInfo("BACKUP_FOLDER")
-        print("Backup folder: ", backupFolder)
+        # print("Backup folder: ", backupFolder)
 
         for currentPath, directory, files in os.walk(self.root):
 
@@ -59,6 +59,7 @@ class FileReader:
 
         jsonDicts = []
         currentFile = open(fileName, "r")
+        # print(fileName)
         # print(currentFile)
         contents = currentFile.read()
 
@@ -66,6 +67,7 @@ class FileReader:
             lines = contents.splitlines()
             for line in lines:
                 data = json.loads(line)
+                data["file_location"] = fileName
                 # print(data)
                 jsonDicts.append(data)
 
@@ -89,6 +91,30 @@ class FileReader:
 
         self.documents = documents
         return
+
+    def prepareDocuments(self, jsonDicts):
+        documents = []
+        counter = 0
+
+        for currentDict in jsonDicts:
+            for document in currentDict:
+                removedKeys = []
+                addedAttributes = []
+                for key, attribute in document.items():
+                    if type(attribute) is dict:
+                        counter += 1
+                        addedAttributes.append(attribute)
+                        removedKeys.append(key)
+
+                for key in removedKeys:
+                    document.pop(key)
+                for attribute in addedAttributes:
+                    document.update(attribute)
+
+                documents.append(document)
+
+        # print("Document Counter = ", counter)
+        return documents
 
     # Test methods
     def test(self):
