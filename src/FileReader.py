@@ -1,132 +1,117 @@
 import json
-from pathlib import Path
 import os as os
+import src.utils as utils
 
 
 class FileReader:
 
     def __init__(self):
 
-        self.configData = self.getConfigData()
-        self.root = self.getRoot()
+        self.config_data = utils.get_config_data()
+        self.root = utils.get_info(self.config_data, "JSON_PATH")
+        self.backup_folder = utils.get_info(self.config_data, "BACKUP_FOLDER")
 
         self.files = []
         self.documents = []
 
-        # print("FileReader created!")
-        # print("Root = ", self.root)
-
-    # Get config data from the config file
-    def getConfigData(self):
-
-        configLocation = "config/config.json"
-        configFile = open(configLocation, "r")
-        configData = configFile.read()
-        return configData
-
-    # Get root path from the config data as relative path
-    def getRoot(self):
-
-        data = json.loads(self.configData)
-
-        rootLocation = str(data["JSON_PATH"])
-
-        return Path(rootLocation)
-
     # Get the .json files to be read in a list
-    def getFiles(self):
+    def get_files(self):
 
-        backupFolder = self.getInfo("BACKUP_FOLDER")
-        # print("Backup folder: ", backupFolder)
+        # print("Backup folder: ", self.backup_folder)
 
-        for currentPath, directory, files in os.walk(self.root):
+        for current_path, directory, files in os.walk(self.root):
 
-            for currentFileName in files:
+            for current_filename in files:
 
-                if '.json' in currentFileName and not currentFileName.startswith('._') and backupFolder not in currentPath:
+                if '.json' in current_filename and not current_filename.startswith('._') and self.backup_folder not in current_path:
 
-                    self.files.append(os.path.join(currentPath, currentFileName))
+                    self.files.append(os.path.join(current_path, current_filename))
 
-        return
-
-    def addDocument(self, document):
-
-        self.documents.append(document)
-        return
+        return self.files
 
     # Read the json file line by line and return the dictionaries as a list
-    def readJSON(self, fileName):
+    def read_JSON(self, file_name):
 
-        jsonDicts = []
-        currentFile = open(fileName, "r")
-        # print(fileName)
-        # print(currentFile)
-        contents = currentFile.read()
+        json_dicts = []
+        current_file = open(file_name, "r")
+        contents = current_file.read()
 
         try:
             lines = contents.splitlines()
+
             for line in lines:
                 data = json.loads(line)
-                data["file_location"] = fileName
+                data["file_location"] = file_name
                 # print(data)
-                jsonDicts.append(data)
+                json_dicts.append(data)
 
         except ValueError:
 
             print("Value Error! There is a problem with the json file! ")
             # pass
 
-        currentFile.close()
-        return jsonDicts
+        current_file.close()
+        return json_dicts
 
-    # Get wanted info from config data
-    def getInfo(self, configKey):
+    def prepare_documents(self, json_dicts):
 
-        data = json.loads(self.configData)
-        field = str(data[configKey])
+        self.documents = []
 
-        return field
+        for current_dict in json_dicts:
+            for document in current_dict:
 
-    def setDocuments(self, documents):
+                removed_keys = []
+                added_attributes = []
 
-        self.documents = documents
-        return
-
-    def prepareDocuments(self, jsonDicts):
-        documents = []
-        counter = 0
-
-        for currentDict in jsonDicts:
-            for document in currentDict:
-                removedKeys = []
-                addedAttributes = []
                 for key, attribute in document.items():
                     if type(attribute) is dict:
-                        counter += 1
-                        addedAttributes.append(attribute)
-                        removedKeys.append(key)
+                        added_attributes.append(attribute)
+                        removed_keys.append(key)
 
-                for key in removedKeys:
+                    # elif key == "user_agent":
+                        # agents = attribute.split(")")
+                        # document[key] = agents
+
+                for key in removed_keys:
                     document.pop(key)
-                for attribute in addedAttributes:
+
+                for attribute in added_attributes:
                     document.update(attribute)
 
-                documents.append(document)
+                self.documents.append(document)
 
-        # print("Document Counter = ", counter)
-        return documents
+        return self.documents
 
-    # Test methods
+    # Count the number of .json files in facebook-backup
+    def count_backup(self):
+
+        backup_docs = []
+
+        file_locations = [f for f in self.root.glob(self.backup_folder + "/**/*") if
+                          f.is_file() and not f.name.startswith("._") and f.name.endswith(".json")]
+
+        for current_file in file_locations:
+
+            json_dicts = self.read_JSON(current_file)
+            for dict in json_dicts:
+                backup_docs.append(dict)
+
+        backup_size = backup_docs.__len__()
+        print("Backup size = ", backup_size)
+
+        return backup_docs
+
+    # Test
     def test(self):
 
-        print("Config data = ", self.configData)
+        print("Config data = ", self.config_data)
         print("Root = ", self.root)
 
-        self.getFiles()
+        self.get_files()
         print(self.files)
 
-        jsonDicts = self.readJSON(self.files[0])
-        for dict in jsonDicts:
+        json_dicts = self.read_JSON(self.files[0])
+        for dict in json_dicts:
             self.documents.append(dict)
 
         print(self.documents)

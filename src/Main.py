@@ -3,141 +3,58 @@ from src.DBMS import DBMS as dbms
 from src.FileReader import FileReader as fr
 import multiprocessing as mp
 import multiprocessing.pool as pool
-from bson import Code
-from pymongo import MongoClient
+import src.utils as utils
 
 
 def main():
 
-    start = time.time()
+    start_time = time.time()
 
-    fileReader = fr()
+    file_reader = fr()
+    config_data = file_reader.config_data
 
-    # Create processes equal to the number of cpu's
+    # Create processes equal to the number of cpu's - 1
     if mp.cpu_count() >= 2:
-        processCount = mp.cpu_count() - 1
+        process_count = mp.cpu_count() - 1
 
     else:
-        processCount = 1
+        process_count = 1
+    print("The number of threads is: ", process_count)
 
-    print("The number of threads is: ", processCount)
+    init_time = time.time()
+    print("Pre file reading duration = ", init_time - start_time)
 
-    initTime = time.time()
-    print("Pre file reading duration is: ", initTime - start)
+    files = file_reader.get_files()
+    get_file_time = time.time()
+    print("File getting duration = ", get_file_time - init_time)
 
-    fileReader.getFiles()
-    files = fileReader.files
-
-    print("Time getting files = ", time.time() - initTime)
-
-    processes = pool.Pool(processCount)
-    json_dicts = processes.map(fileReader.readJSON, files)
+    processes = pool.Pool(process_count)
+    json_dicts = processes.map(file_reader.read_JSON, files)
     processes.close()
 
-    documents = fileReader.prepareDocuments(json_dicts)
+    documents = file_reader.prepare_documents(json_dicts)
 
     read_time = time.time()
-    print("File reading duration is: ", read_time - initTime)
+    print("File reading duration is: ", read_time - get_file_time)
 
     # Connect to db
-    collectionName = fileReader.getInfo("COLLECTION_NAME")
-    DB = dbms(collectionName)
+    collection_name = utils.get_info(config_data, "COLLECTION_NAME")
+    db = dbms(collection_name)
 
-    # DB.insertAll(documents)
-    DB.insertDocuments(documents)
+    if db.current_collection.count() != 0:
+        "Database is already full"
+    else:
+        "Database is empty, inserting documents"
+        db.insert_documents(documents)
 
-    injectionTime = time.time()
-    print("Database injection time is: ", injectionTime - read_time)
+    injection_time = time.time()
+    print("Database injection time is: ", injection_time - read_time)
 
-    DB.close()
-
-    return
-
-
-# Count the number of .json files in facebook-backup
-def countBackup():
-
-    fileReader = fr()
-    root = fileReader.getRoot()
-
-    backupDocs = []
-    fileReader = fr()
-    fileLocations = [f for f in root.glob("facebook-backup/**/*") if
-                     f.is_file() and not f.name.startswith("._") and f.name.endswith(".json")]
-    for currentFile in fileLocations:
-        jsonDicts = fileReader.readJSON(currentFile)
-        for dict in jsonDicts:
-            backupDocs.append(dict)
-
-    backupSize = backupDocs.__len__()
-    print("Backup size = ", backupSize)
+    db.close()
 
     return
-
-
-def iterationInject(DB, documents):
-
-    duplicateCount = 0
-    duplicates = []
-    nonUnique = 0
-    for document in documents:
-        if DB.insertDocument(document):  # If the document is duplicate
-
-            duplicateCount += 1
-            duplicates.append(document)
-            # duplicates.append(DB.currentCollection.find({"request_id": document["request_id"]}))
-
-            isUnique = True
-
-            for item in document.items():
-                if type(item) is dict:
-                    for otherItem in DB.currentCollection.find_one({"request_id": document["request_id"]}).items():
-                        if type(otherItem) is dict:
-                            otherList = otherItem
-
-                            if item != otherList:
-                                isUnique = False
-
-                        else:
-                            if item not in DB.currentCollection.find_one({"request_id": document["request_id"]}).items():
-                                isUnique = False
-
-            if not isUnique:
-                print("Document = ", document)
-                print("DB = ", DB.currentCollection.find_one({"request_id": document["request_id"]}))
-                nonUnique += 1
-
-    print("The number of nonuniques = ", nonUnique)
-    print("Duplicate count = ", duplicateCount)
-    # print(duplicates)
-    print("Duplicates Length = ", duplicates.__len__())
-
-    return documents
-
-
-def get_keys():
-
-    fileReader = fr()
-
-    configData = fileReader.getConfigData()
-
-    client = MongoClient(fileReader.getInfo("CLIENT_URL"))
-
-    db = client[fileReader.getInfo("DB_NAME")]
-    collectionName = fileReader.getInfo("COLLECTION_NAME")
-
-    map = Code("function() { for (var key in this) { emit(key, null); } }")
-    reduce = Code("function(key, stuff) { return null; }")
-    result = db[collectionName].map_reduce(map, reduce, "Attributes")
-    # print(result.distinct('_id'))
-    last = {}
-    for element in result.distinct('_id'):
-        last[element] = type(element)
-    return last
 
 
 if __name__ == '__main__':
 
-    # main()
-    get_keys()
-    # countBackup()
+    main()

@@ -10,7 +10,7 @@ MongoDB is used as the database program
 
 * Python 3.6  
 
-* MongoDB desktop program
+* MongoDB database program
 
 * The Python libraries listed in "requirements.txt"  
 
@@ -26,6 +26,8 @@ MongoDB is used as the database program
 * Open the project folder in the terminal  
 * Enter command < pip install -r requirements.txt >  
 * Run Main.py with Python or a Python Editor  
+
+Please make sure the working directory is the project folder, not src!
 
 The program runs for approximately 3 minutes, please be patient  
 The data will be written to a database  

@@ -1,129 +1,175 @@
 import psycopg2
-import json
-from src.DBMS import DBMS as dbms
-from src.FileReader import FileReader as fr
-from bson import Code
-from pymongo import MongoClient
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+import src.utils as utils
+import time
+import src.DBMS as mongodb
+import psycopg2.sql as sql
+from psycopg2.extensions import adapt
+from psycopg2.extensions import AsIs
 
 
 class PostgreDB:
 
     def __init__(self):
 
-        self.config_data = self.get_configData()
+        start_time = time.time()
 
-        self.DB_NAME, self.USER, self.PASSWORD, self.HOST, self.PORT = self.init_config()
+        self.config_data = utils.get_config_data()
+
+        self.DB_NAME, self.USER, self.PASSWORD, self.HOST, self.PORT, self.DEFAULT_DB = self.init_config()
 
         try:
 
-            self.connection = psycopg2.connect(database=self.DB_NAME, user=self.USER, password=self.PASSWORD,
+            # Connect to default db first
+            self.temp_connection = psycopg2.connect(database=self.DEFAULT_DB, user=self.USER, password=self.PASSWORD,
                                                host=self.HOST, port=self.PORT)
-            print("Connection successful!")
-            self.connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-            self.cursor = self.connection.cursor()
+            self.temp_connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+            print("Connected!")
 
-            """
-            query = "SELECT 'CREATE DATABASE "
-            query += "'" + self.DB_NAME
-            query += "'\nWHERE NOT EXISTS(SELECT FROM pg_database WHERE datname = "
-            query += "'" + self.DB_NAME + "'"
-            query += ")\gexec"
+            init_time = time.time() - start_time
+            print("Init time = ", init_time)
 
-            self.cursor.execute("IF EXISTS (SELECT FROM pg_database WHERE datname = %s ;)" + self.DB_NAME)
-
-            self.cursor.execute("CREATE DATABASE %s  ;" % self.DB_NAME_name)
-            """
-
-            self.create_tables_example()
+            self.create_db()
+            self.connection = self.connect()
 
         except psycopg2.DatabaseError as error:
 
             print(error)
 
-        # print(self.DB_NAME, self.HOST, self.PASSWORD, self.PORT, self.USER)
-
-        self.attributes = self.get_attributes()
+        self.attributes = utils.get_keys()
         # print(self.attributes)
         print("Constructor done!")
+        print("Construction time = ", time.time() - start_time)
 
-    def create_DB(self):
-        self.cursor.execute("CREATE DATABASE %s  ;" % self.DB_NAME_name)
-        return
+    def create_db(self):
+
+        start = time.time()
+
+        try:
+
+            cursor = self.temp_connection.cursor()
+            cursor.execute("""
+                            CREATE DATABASE postgresdb; 
+                            """)
+
+            print("Database creation time = ", time.time() - start)
+
+        except psycopg2.Error as error:
+            print("Database creation fail time = ", time.time() - start)
+            print(error)
+
+        finally:
+            cursor.close()
+
+    def connect(self):
+        start = time.time()
+        print("Connecting!")
+
+        try:
+
+            connection = psycopg2.connect(database=self.DB_NAME, user=self.USER, password=self.PASSWORD,
+                                            host=self.HOST, port=self.PORT)
+            connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+            print("Connection successful!")
+
+            print("Database connection time =", time.time() - start)
+
+        except psycopg2.Error as error:
+
+            print(error)
+            print("Database connection fail time =", time.time() - start)
+
+        finally:
+            return connection
 
     # Get connection info from config
     def init_config(self):
 
-        DB_NAME = self.get_info("POSTGRES_DB_NAME")
-        USER = self.get_info("POSTGRES_USER")
-        PASSWORD = self.get_info("POSTGRES_PASSWORD")
-        HOST = self.get_info("POSTGRES_HOST")
-        PORT = self.get_info("POSTGRES_PORT")
+        DB_NAME = utils.get_info(self.config_data, "POSTGRES_DB_NAME")
+        USER = utils.get_info(self.config_data, "POSTGRES_USER")
+        PASSWORD = utils.get_info(self.config_data, "POSTGRES_PASSWORD")
+        HOST = utils.get_info(self.config_data, "POSTGRES_HOST")
+        PORT = utils.get_info(self.config_data, "POSTGRES_PORT")
+        DEFAULT = utils.get_info(self.config_data, "POSTGRES_DEFAULT")
 
-        return DB_NAME, USER, PASSWORD, HOST, PORT
+        return DB_NAME, USER, PASSWORD, HOST, PORT, DEFAULT
 
-    # Get config data from the config file
-    def get_configData(self):
-        config_location = "config/config.json"
-        config_file = open(config_location, "r")
-        config_data = config_file.read()
-        return config_data
+    # Create table
+    def create_table(self):
 
-    # Get wanted info from config data
-    def get_info(self, config_key):
-        data = json.loads(self.config_data)
-        field = str(data[config_key])
+        table_name = utils.get_info(self.config_data, "COLLECTION_NAME")
+        cursor = self.connection.cursor("""
+                                        DROP TABLE IF EXISTS Requests CASCADE ;
+                                        """)
 
-        return field
+        try:
 
-    def get_attributes(self):
+            cursor.execute()
 
-        fileReader = fr()
+            cursor.execute("""
+                            CREATE TABLE IF NOT EXISTS Requests (
+                            _id SERIAL PRIMARY KEY
+                            )
+                            """,)
 
-        configData = fileReader.getConfigData()
+            print("TABLE CREATED!")
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            print("TABLE COULD NOT BE CREATED!")
 
-        client = MongoClient(fileReader.getInfo("CLIENT_URL"))
+    # Read database from mongodb and create a table importing the data
+    def read_mongodb(self):
 
-        db = client[fileReader.getInfo("DB_NAME")]
-        collectionName = fileReader.getInfo("COLLECTION_NAME")
+        collection_name = utils.get_info(self.config_data, "COLLECTION_NAME")
+        mongo_db = mongodb.DBMS(collection_name)
+        cursor = self.connection.cursor()
+        self.attributes = utils.transform_types(self.attributes)
 
-        map = Code("function() { for (var key in this) { emit(key, null); } }")
-        reduce = Code("function(key, stuff) { return null; }")
-        result = db[collectionName].map_reduce(map, reduce, "Attributes")
+        for key, value in self.attributes.items():
 
-        attributes = {}
-
-        for attribute in result.distinct('_id'):
-            attributes[attribute] = type(attribute)
-
-        print(attributes)
-        return attributes
+            cursor.execute(sql.SQL('ALTER TABLE Requests '
+                                    'ADD COLUMN IF NOT EXISTS %s %s ;'), (AsIs(key), AsIs(value), ))
 
     def create_tables_example(self):
+
+        start = time.time()
         commands = (
             """
-            CREATE TABLE IF NOT EXISTS vendors (
-            vendor_id SERIAL PRIMARY KEY,
-            vendor_name VARCHAR(255) NOT NULL
-        )
-            """,
-            """ CREATE TABLE IF NOT EXISTS parts (
-                part_id SERIAL PRIMARY KEY,
-                part_name VARCHAR(255) NOT NULL
-                )
+            DROP TABLE IF EXISTS vendors CASCADE ;
             """,
             """
-        CREATE TABLE IF NOT EXISTS part_drawings (
+            DROP TABLE IF EXISTS parts CASCADE;
+            """,
+            """
+            DROP TABLE IF EXISTS part_drawings CASCADE;
+            """,
+            """
+            DROP TABLE IF EXISTS vendor_parts CASCADE;
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS vendors (
+                vendor_id SERIAL PRIMARY KEY,
+                vendor_name VARCHAR(255) NOT NULL
+            )
+            """,
+            """ 
+            CREATE TABLE IF NOT EXISTS parts (
+                part_id SERIAL PRIMARY KEY,
+                part_name VARCHAR(255) NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS part_drawings (
                 part_id INTEGER PRIMARY KEY,
                 file_extension VARCHAR(5) NOT NULL,
                 drawing_data BYTEA NOT NULL,
                 FOREIGN KEY (part_id)
                 REFERENCES parts (part_id)
                 ON UPDATE CASCADE ON DELETE CASCADE
-        )
+            )
             """,
             """
-        CREATE TABLE IF NOT EXISTS vendor_parts (
+            CREATE TABLE IF NOT EXISTS vendor_parts (
                 vendor_id INTEGER NOT NULL,
                 part_id INTEGER NOT NULL,
                 PRIMARY KEY (vendor_id , part_id),
@@ -133,30 +179,29 @@ class PostgreDB:
                 FOREIGN KEY (part_id)
                     REFERENCES parts (part_id)
                     ON UPDATE CASCADE ON DELETE CASCADE
-        )
+            )
             """)
 
         try:
+            cursor = self.connection.cursor()
             for command in commands:
-                self.cursor.execute(command)
+                cursor.execute(command)
 
-            self.cursor.close()
-            self.connection.commit()
+            cursor.close()
             print("Tables created! ")
 
         except (Exception, psycopg2.DatabaseError) as Error:
+            print("Tables couldn't be created! ")
             print(Error)
 
         finally:
 
-            if self.connection is not None:
-                self.connection.close()
-
-    def manual_attributes(self):
-        attributes = ["accounts", "action", "client_ip", "controller", "device", "devices", "divID", "dwh",
-                      "email", "environment", "file_location", "filter", "host", "method", "module",
-                      "oauth_proxy_redirect_host", "path", "referrer", "request_id", "token", "type", "user_id",
-                      "user_name", "username"]
+            print("Table example creation time =", time.time() - start)
 
 
-DB = PostgreDB()
+
+db = PostgreDB()
+db.create_table()
+db.read_mongodb()
+# test()
+
