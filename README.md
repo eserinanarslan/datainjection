@@ -1,5 +1,4 @@
 # DataInjection
-R&amp;D Intern Project
 
 This project contains a program to read .json files from a local folder and 
 writes the read data to a local database.
