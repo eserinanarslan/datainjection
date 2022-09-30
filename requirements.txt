@@ -1,5 +1,5 @@
 httpagentparser==1.8.2
-joblib==0.12.2
+joblib==1.2.0
 pip==19.1.1
 setuptools==40.8.0
 pymongo==3.8.0
